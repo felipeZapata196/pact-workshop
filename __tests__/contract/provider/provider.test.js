@@ -1,29 +1,25 @@
-const path = require("path")
 const { Verifier } = require("@pact-foundation/pact")
-const { server, importData } = require("../../../src/provider")
 
-const SERVER_URL = "http://localhost:8081"
+const SERVER_URL = 'http://18.217.133.22:8001'
+jest.setTimeout(50000)
 
-server.listen(8081, () => {
-    importData()
-    console.log(`Clients Service listening on ${SERVER_URL}`)
-  })
-  
   describe("Clients Service Verification", () => {
-    it("validates the expectations of Client Service", () => {
+    it("validates the expectations of CX", () => {
       let opts = {
-            provider: "Clients Service",
+            provider: "CX",
             logLevel: "DEBUG",
             providerBaseUrl: SERVER_URL,
-            pactUrls: ['http://localhost:8080/pacts/provider/ClientsService/consumer/Frontend/latest'],
+            pactUrls: ['https://chs.pactflow.io/pacts/provider/CX/consumer/DialogApi/latest'],
             consumerVersionTags: ["dev"],
             providerVersionTags: ["dev"],
             publishVerificationResult: true,
-            providerVersion: "1.0.1"
+            providerVersion: "1.0.1",
+            changeOrigin: 'true',
+            validateSSL: false
           }
         return new Verifier(opts).verifyProvider().then(output => {
             console.log("Pact Verification Complete!")
             console.log(output)
         })
     })
-})
+  })
